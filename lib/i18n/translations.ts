@@ -158,7 +158,7 @@ export const translations = {
       thankYou: '¡Gracias!',
       thankYouMessage: 'Hemos recibido tu mensaje y nos pondremos en contacto pronto',
       fullName: 'Nombre Completo',
-      namePlaceholder: 'Juan Pérez',
+      namePlaceholder: 'Esteban Marquez',
       emailLabel: 'Correo Electrónico',
       emailPlaceholder: 'juan@ejemplo.com',
       phoneNumber: 'Número de Teléfono',

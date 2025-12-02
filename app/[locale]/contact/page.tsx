@@ -109,7 +109,7 @@ export default function ContactPage() {
                 <h2 className="text-2xl font-light text-zinc-900 mb-6">{t.contact.contactInfoTitle}</h2>
 
                 <div className="space-y-6">
-                  <div className="flex items-start gap-4">
+                  {/* <div className="flex items-start gap-4">
                     <div className="w-12 h-12 bg-zinc-900 text-white rounded-lg flex items-center justify-center flex-shrink-0">
                       <Phone size={20} />
                     </div>
@@ -118,9 +118,9 @@ export default function ContactPage() {
                       <p className="text-zinc-600 font-light">(33) 555-0123</p>
                       <p className="text-sm text-zinc-500 font-light">{t.contact.phoneHours}</p>
                     </div>
-                  </div>
+                  </div> */}
 
-                  <div className="flex items-start gap-4">
+                  {/* <div className="flex items-start gap-4">
                     <div className="w-12 h-12 bg-zinc-900 text-white rounded-lg flex items-center justify-center flex-shrink-0">
                       <Mail size={20} />
                     </div>
@@ -129,7 +129,7 @@ export default function ContactPage() {
                       <p className="text-zinc-600 font-light">info@losaltos.com</p>
                       <p className="text-sm text-zinc-500 font-light">{t.contact.emailResponse}</p>
                     </div>
-                  </div>
+                  </div> */}
 
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 bg-zinc-900 text-white rounded-lg flex items-center justify-center flex-shrink-0">
@@ -137,8 +137,8 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <h3 className="font-light text-zinc-900 mb-1">{t.contact.office}</h3>
-                      <p className="text-zinc-600 font-light">123 Main Street</p>
-                      <p className="text-zinc-600 font-light">Los Altos, CA 94022</p>
+                      <p className="text-zinc-600 font-light">Agua Blanca Industrial</p>
+                      <p className="text-zinc-600 font-light">Zapopan, Jalisco</p>
                     </div>
                   </div>
                 </div>
@@ -156,7 +156,7 @@ export default function ContactPage() {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-zinc-600 font-light">{t.contact.sunday}</span>
-                      <span className="text-zinc-900 font-light">{t.contact.closed}</span>
+                      <span className="text-zinc-900 font-light">10:00 AM - 4:00 PM</span>
                     </div>
                   </div>
                 </div>
@@ -300,7 +300,7 @@ export default function ContactPage() {
       </section>
 
       {/* Map Section */}
-      <section className="h-96 bg-zinc-200 relative">
+      {/* <section className="h-96 bg-zinc-200 relative">
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">
             <MapPin className="mx-auto mb-4 text-zinc-400" size={48} />
@@ -308,7 +308,7 @@ export default function ContactPage() {
             <p className="text-zinc-500">{t.contact.mapPlaceholder}</p>
           </div>
         </div>
-      </section>
+      </section> */}
     </div>
   );
 }
