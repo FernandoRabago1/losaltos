@@ -1,0 +1,92 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  password  String
+  role      String   @default("admin") // admin role for all users
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Project {
+  id               String               @id @default(cuid())
+  slug             String               @unique
+  title            String               // Default language (Spanish)
+  location         String
+  year             String
+  status           String               // 'completado' | 'en progreso' | 'concept'
+  typology         String               // Must be: 'industrial' | 'residencial' | 'comercial' | 'arte'
+  description      String               // Default language (Spanish)
+  shortDescription String               // Default language (Spanish)
+  images           String               // JSON array of image paths
+  featuredImage    String
+  tags             String?              // JSON array of tags
+  area             String?
+  client           String?
+  team             String?              // JSON array of team objects
+  featured         Boolean              @default(false)
+  popular          Boolean              @default(false) // Show in search "Popular" section
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+  featuredProjects FeaturedProject[]
+  translations     ProjectTranslation[] // Multi-language support
+}
+
+model Category {
+  id        String   @id @default(cuid())
+  slug      String   @unique // 'industrial' | 'residencial' | 'comercial' | 'arte'
+  name      String   // Display name in Spanish
+  enabled   Boolean  @default(false)
+  order     Int      @default(0) // For sorting categories
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Tag {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  enabled   Boolean  @default(true)
+  order     Int      @default(0) // For sorting tags in search
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model FeaturedProject {
+  id        String   @id @default(cuid())
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  order     Int      @default(0) // For drag & drop ordering
+  enabled   Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([projectId])
+  @@index([order])
+}
+
+model ProjectTranslation {
+  id               String   @id @default(cuid())
+  projectId        String
+  locale           String   // 'en' | 'es' | 'zh' | 'ja' | 'pt'
+  title            String
+  description      String
+  shortDescription String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  project          Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, locale])
+  @@index([locale])
+}
