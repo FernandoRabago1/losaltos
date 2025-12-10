@@ -1,53 +1,87 @@
-import { NextRequest, NextResponse } from "next/server";
-import { Resend } from "resend";
+import { Resend } from 'resend';
+import { NextRequest, NextResponse } from 'next/server';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY!);
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { name, email, phone, projectType, message } = body;
 
-    // Validación básica
+    console.log('📩 Contact form received:', body);
+
+    // Validate required fields
     if (!name || !email || !message || !projectType) {
+      console.warn('⚠️ Missing required fields:', body);
       return NextResponse.json(
-        { error: "Faltan campos obligatorios" },
+        { error: 'Missing required fields' },
         { status: 400 }
       );
     }
 
-    const htmlContent = `
-      <h2>Nueva consulta desde el sitio web LOS ALTOS</h2>
+    const html = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #18181b; border-bottom: 2px solid #18181b; padding-bottom: 10px;">
+          Nueva Consulta de Proyecto
+        </h2>
 
-      <h3>Información del cliente</h3>
-      <p><strong>Nombre:</strong> ${name}</p>
-      <p><strong>Email:</strong> ${email}</p>
-      <p><strong>Teléfono:</strong> ${phone || "No proporcionado"}</p>
-      <p><strong>Tipo de proyecto:</strong> ${projectType}</p>
+        <div style="margin: 20px 0;">
+          <h3 style="color: #52525b; margin-bottom: 5px;">Información del Cliente</h3>
+          <p><strong>Nombre:</strong> ${name}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Teléfono:</strong> ${phone || 'No proporcionado'}</p>
+          <p><strong>Tipo de Proyecto:</strong> ${projectType}</p>
+        </div>
 
-      <h3>Mensaje</h3>
-      <p>${message}</p>
+        <div style="margin: 20px 0;">
+          <h3 style="color: #52525b; margin-bottom: 5px;">Mensaje</h3>
+          <div style="background: #f4f4f5; padding: 15px; border-radius: 8px; white-space: pre-wrap;">
+            ${message}
+          </div>
+        </div>
 
-      <hr />
-      <p>Este mensaje fue enviado desde el formulario de contacto de <a href="https://losaltos-constructora.com">losaltos-constructora.com</a></p>
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e4e4e7; color: #71717a; font-size: 12px;">
+          <p>Este mensaje fue enviado desde el formulario de contacto del sitio web.</p>
+          <p>Responde directamente a este email para contactar al cliente.</p>
+        </div>
+      </div>
     `;
 
-    const data = await resend.emails.send({
-      from: process.env.EMAIL_FROM!,                     // Ej: "LOS ALTOS <contacto@losaltos-constructora.com>"
-      to: ["fernando.rabago05@gmail.com"],               // 👈 Aquí te llegan los correos
-      replyTo: email,                                    // 👈 Para que al responder, le respondas al cliente
-      subject: `Nueva consulta: ${projectType} - ${name}`,
-      html: htmlContent,
+    const { data, error } = await resend.emails.send({
+      from:
+        process.env.EMAIL_FROM ??
+        'LOS ALTOS <onboarding@resend.dev>', // mientras verificas dominio
+      to: [process.env.CONTACT_EMAIL ?? 'fernando.rabago05@gmail.com'],
+      replyTo: email,
+      subject: `Nueva Consulta: ${projectType} - ${name}`,
+      html,
     });
 
+    console.log('📨 Resend response:', { data, error });
+
+    if (error) {
+      console.error('❌ Resend error:', error);
+      return NextResponse.json(
+        {
+          error: 'Error sending email',
+          details: error,
+        },
+        { status: 500 }
+      );
+    }
+
     return NextResponse.json(
-      { success: true, data },
+      {
+        success: true,
+        message: 'Email sent successfully',
+        id: data?.id,
+      },
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error en /api/contact:", error);
+    console.error('🔥 Contact form error:', error);
     return NextResponse.json(
-      { error: "Error interno del servidor" },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }
